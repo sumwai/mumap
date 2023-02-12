@@ -7,11 +7,13 @@ import (
 	"testing"
 )
 
+var count int = 1e1
+
 func TestMumapGetSet(t *testing.T) {
 	type Point struct {
 		X, Y int
 	}
-	var c int = 1e4 + 1
+	var c int = count + 1
 
 	m := New[string, *Point]()
 	var i int
@@ -31,7 +33,7 @@ func TestMumapGetSet(t *testing.T) {
 }
 
 func TestMumapEach(t *testing.T) {
-	var c int = 1e4
+	var c int = count
 	var want int = 0
 	var got int = 0
 	var num int = 100
@@ -66,5 +68,31 @@ func TestMumapEach(t *testing.T) {
 
 	if got != want {
 		t.Fatalf("Each error, Want: %d, but Got: %d", want, got)
+	}
+}
+
+func TestFilter(t *testing.T) {
+	m := New[int, int]()
+
+	var c int = count
+
+	want := 0
+	got := 0
+
+	for i := 0; i < c; i++ {
+		if i%100 == 0 {
+			want++
+		}
+		m.Set(i, i)
+	}
+
+	m2 := m.Filter(func(k, v int) bool {
+		return v%100 == 0
+	})
+
+	got = m2.Length()
+
+	if got != want {
+		t.Fatalf("Filter error, want: %d, but got: %d", want, got)
 	}
 }

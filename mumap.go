@@ -41,6 +41,27 @@ func (m *Mumap[K, V]) Each(do EachFunc[K, V]) {
 	}
 }
 
+// Filter return's a new mumap from m
+// and if that EachFunc return true, set new mumap's item, otherwise, not set
+// that is like Each, but Each return nothing
+func (m *Mumap[K, V]) Filter(do EachFunc[K, V]) (newmap *Mumap[K, V]) {
+	newmap = New[K, V]()
+
+	m.Each(func(k K, v V) bool {
+		if do(k, v) {
+			newmap.Set(k, v)
+		}
+		return false
+	})
+
+	return
+}
+
+// Length return map's length
+func (m *Mumap[K, V]) Length() int {
+	return len(m.Map)
+}
+
 // New Create a new mumap
 func New[K comparable, V interface{}]() (m *Mumap[K, V]) {
 	m = new(Mumap[K, V])
