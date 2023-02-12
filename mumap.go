@@ -57,6 +57,11 @@ func (m *Mumap[K, V]) Filter(do EachFunc[K, V]) (newmap *Mumap[K, V]) {
 	return
 }
 
+// Delete key
+func (m *Mumap[K, V]) Delete(k K) {
+	delete(m.Map, k)
+}
+
 // Length return map's length
 func (m *Mumap[K, V]) Length() int {
 	return len(m.Map)
